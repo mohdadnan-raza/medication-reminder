@@ -15,7 +15,7 @@ app.use(bodyParser.json());
 
 // Home route
 app.get('/', (req, res) => {
-    res.send('Medication Reminder System is Running 🚀');
+    res.send('Medication Reminder System is Live ✅ Use POST /call to start a call.');
 });
 
 // Start the server
