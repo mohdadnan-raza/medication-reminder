@@ -34,7 +34,7 @@ app.post('/call', async (req, res) => {
         const call = await client.calls.create({
             to: phoneNumber,
             from: process.env.TWILIO_PHONE_NUMBER,
-            url: 'http://your-ngrok-url.ngrok.io/voice', // Update this later with your Ngrok URL
+            url: 'https://medication-reminder-production.up.railway.app/voice',
         });
 
         console.log(`📞 Call initiated: SID = ${call.sid}`);
