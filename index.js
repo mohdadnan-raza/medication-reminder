@@ -107,29 +107,39 @@ app.post('/status', async (req, res) => {
 
     console.log(`📞 Call completed. Status: ${callStatus}, AnsweredBy: ${answeredBy}`);
 
-    if (answeredBy !== 'human') {
-        // Leave voicemail via another TwiML route
-        const client = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
+    const client = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
 
+    if (answeredBy !== 'human') {
         try {
+            // Attempt voicemail
             await client.calls.create({
                 to,
                 from: process.env.TWILIO_PHONE_NUMBER,
                 url: 'https://medication-reminder-production.up.railway.app/voicemail'
             });
+
             console.log('📩 Voicemail triggered.');
+
         } catch (err) {
-            console.log('❌ Failed to leave voicemail. Sending fallback SMS.');
-            await client.messages.create({
-                to,
-                from: process.env.TWILIO_PHONE_NUMBER,
-                body: "We tried to reach you to confirm your medication but couldn’t get through. Please call us back or take your medicines if you haven't already."
-            });
+            console.log('❌ Voicemail call failed. Sending SMS fallback...');
+
+            try {
+                await client.messages.create({
+                    to,
+                    from: process.env.TWILIO_PHONE_NUMBER,
+                    body: "We tried to reach you to confirm your medication, but couldn’t get through. Please take your medicines or call us back if you have questions."
+                });
+
+                console.log('📲 SMS fallback sent.');
+            } catch (smsErr) {
+                console.error('❌ SMS fallback also failed:', smsErr.message);
+            }
         }
     }
 
     res.status(200).send('OK');
 });
+
 
 
 app.post('/voicemail', (req, res) => {
