@@ -75,7 +75,7 @@ app.post('/recording', (req, res) => {
     const callSid = req.body.CallSid;
     const transcriptionText = req.body.TranscriptionText || 'N/A';
     const callStatus = req.body.CallStatus;
-    const recordingUrl = req.body.RecordingUrl;
+    const recordingUrl = req.body.RecordingUrl || 'Not available';
 
     const logEntry = {
         sid: callSid,
@@ -97,8 +97,10 @@ app.post('/recording', (req, res) => {
 });
 
 
+
 app.get('/logs', (req, res) => {
     res.json({ logs: callLogs });
 });
+
 
 
