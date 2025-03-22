@@ -158,7 +158,6 @@ app.post('/incoming', (req, res) => {
     res.send(twiml.toString());
 });
 
-
 app.get('/logs', (req, res) => {
     res.json({ logs: callLogs });
 });
