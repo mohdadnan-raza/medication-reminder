@@ -29,7 +29,7 @@ This is a simple voice-based medication reminder system built as part of a take-
 ## Setup Instructions
 
 ### 1. Clone the Repository
-```bash
+
 git clone https://github.com/mohdadnan-raza/medication-reminder.git
 cd medication-reminder
 
