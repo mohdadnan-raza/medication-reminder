@@ -84,6 +84,5 @@ Twilio trial accounts only support calling verified numbers
 About
 Built as part of a coding assignment for the Node.js Engineer position at DTxPlus to demonstrate skills with backend APIs, Twilio, and real-time communication.
 
-### Contact for more information: 
-Mohammad Adnan Raza
+### Contact for more information: Mohammad Adnan Raza
 ---
