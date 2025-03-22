@@ -73,13 +73,15 @@ app.post('/voice', (req, res) => {
 
 app.post('/recording', (req, res) => {
     const callSid = req.body.CallSid;
-    const transcriptionText = req.body.TranscriptionText;
+    const transcriptionText = req.body.TranscriptionText || 'N/A';
     const callStatus = req.body.CallStatus;
+    const recordingUrl = req.body.RecordingUrl;
 
     const logEntry = {
         sid: callSid,
         status: callStatus,
         transcription: transcriptionText,
+        recordingUrl,
         timestamp: new Date().toISOString(),
     };
 
@@ -89,11 +91,14 @@ app.post('/recording', (req, res) => {
     console.log(`📞 Call SID: ${callSid}`);
     console.log(`📄 Transcription: ${transcriptionText}`);
     console.log(`📶 Status: ${callStatus}`);
+    console.log(`🔗 Recording URL: ${recordingUrl}`);
 
     res.status(200).send('OK');
 });
 
+
 app.get('/logs', (req, res) => {
     res.json({ logs: callLogs });
 });
+
 
