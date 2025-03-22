@@ -29,7 +29,7 @@ This is a simple voice-based medication reminder system built as part of a take-
 ## Setup Instructions
 
 ### 1. Clone the Repository
-
+```bash
 git clone https://github.com/mohdadnan-raza/medication-reminder.git
 cd medication-reminder
 
@@ -84,4 +84,5 @@ Twilio trial accounts only support calling verified numbers
 About
 Built as part of a coding assignment for the Node.js Engineer position at DTxPlus to demonstrate skills with backend APIs, Twilio, and real-time communication.
 
+Contact: Mohammad Adnan Raza for more info
 ---
