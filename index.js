@@ -8,6 +8,8 @@ dotenv.config(); // Load environment variables
 const app = express();
 const port = process.env.PORT || 3000;
 
+const callLogs = [];
+
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
@@ -74,6 +76,15 @@ app.post('/recording', (req, res) => {
     const transcriptionText = req.body.TranscriptionText;
     const callStatus = req.body.CallStatus;
 
+    const logEntry = {
+        sid: callSid,
+        status: callStatus,
+        transcription: transcriptionText,
+        timestamp: new Date().toISOString(),
+    };
+
+    callLogs.push(logEntry);
+
     console.log('📝 Patient Interaction Received:');
     console.log(`📞 Call SID: ${callSid}`);
     console.log(`📄 Transcription: ${transcriptionText}`);
@@ -81,3 +92,8 @@ app.post('/recording', (req, res) => {
 
     res.status(200).send('OK');
 });
+
+app.get('/logs', (req, res) => {
+    res.json({ logs: callLogs });
+});
+
