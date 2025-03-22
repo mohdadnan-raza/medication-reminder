@@ -75,6 +75,15 @@ Deployed here using Railway:
 🔗 https://medication-reminder-production.up.railway.app
 
 
+## Tests
+
+Basic route tests are included using Jest and Supertest.
+
+To run tests:
+npm test
+
+---
+
 Notes
 Transcription and recording handled by Twilio
 Call logs stored in-memory (no DB)
