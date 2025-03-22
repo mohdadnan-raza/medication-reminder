@@ -37,6 +37,10 @@ app.post('/call', async (req, res) => {
             to: phoneNumber,
             from: process.env.TWILIO_PHONE_NUMBER,
             url: 'https://medication-reminder-production.up.railway.app/voice',
+            machineDetection: 'Enable',
+            statusCallback: 'https://medication-reminder-production.up.railway.app/status',
+            statusCallbackEvent: ['completed'],
+            statusCallbackMethod: 'POST'
         });
 
         console.log(`📞 Call initiated: SID = ${call.sid}`);
@@ -96,6 +100,63 @@ app.post('/recording', (req, res) => {
     res.status(200).send('OK');
 });
 
+app.post('/status', async (req, res) => {
+    const callStatus = req.body.CallStatus;
+    const answeredBy = req.body.AnsweredBy;
+    const to = req.body.To;
+
+    console.log(`📞 Call completed. Status: ${callStatus}, AnsweredBy: ${answeredBy}`);
+
+    if (answeredBy !== 'human') {
+        // Leave voicemail via another TwiML route
+        const client = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
+
+        try {
+            await client.calls.create({
+                to,
+                from: process.env.TWILIO_PHONE_NUMBER,
+                url: 'https://medication-reminder-production.up.railway.app/voicemail'
+            });
+            console.log('📩 Voicemail triggered.');
+        } catch (err) {
+            console.log('❌ Failed to leave voicemail. Sending fallback SMS.');
+            await client.messages.create({
+                to,
+                from: process.env.TWILIO_PHONE_NUMBER,
+                body: "We tried to reach you to confirm your medication but couldn’t get through. Please call us back or take your medicines if you haven't already."
+            });
+        }
+    }
+
+    res.status(200).send('OK');
+});
+
+
+app.post('/voicemail', (req, res) => {
+    const twiml = new twilio.twiml.VoiceResponse();
+    twiml.say(
+        {
+            voice: 'alice',
+            language: 'en-US'
+        },
+        "We called to check on your medication but couldn’t reach you. Please call us back or take your medications if you haven’t done so."
+    );
+    res.type('text/xml');
+    res.send(twiml.toString());
+});
+
+app.post('/incoming', (req, res) => {
+    const twiml = new twilio.twiml.VoiceResponse();
+    twiml.say(
+        {
+            voice: 'alice',
+            language: 'en-US'
+        },
+        "Hello, this is a reminder from your healthcare provider to confirm your medications. Please make sure you’ve taken your Aspirin, Cardivol, and Metformin today."
+    );
+    res.type('text/xml');
+    res.send(twiml.toString());
+});
 
 
 app.get('/logs', (req, res) => {
